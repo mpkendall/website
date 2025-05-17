@@ -5,5 +5,8 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind()]
+  integrations: [tailwind()],
+  redirects: {
+    "/tiny4fsk": "https://github.com/New-England-Weather-Balloon-Society/Tiny4FSK"
+  }
 });
