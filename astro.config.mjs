@@ -7,6 +7,7 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   integrations: [tailwind()],
   redirects: {
-    "/tiny4fsk": "https://github.com/New-England-Weather-Balloon-Society/Tiny4FSK"
+    "/tiny4fsk": "https://github.com/New-England-Weather-Balloon-Society/Tiny4FSK",
+    "/tinyeco": "https://github.com/mpkendall/Tiny4FSK-Ecosystem"
   }
 });
