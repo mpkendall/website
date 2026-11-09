@@ -9,6 +9,7 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
   redirects: {
-    '/tiny4fsk': 'https://github.com/New-England-Weather-Balloon-Society/Tiny4FSK'
+    '/tiny4fsk': 'https://github.com/New-England-Weather-Balloon-Society/Tiny4FSK',
+    "/tinyeco": "https://github.com/mpkendall/Tiny4FSK-Ecosystem"
   }
 });
