@@ -1,78 +1,15 @@
 ---
-// Import TiltBox component and define Props
-import TiltBox from "../components/TiltBox.astro";
-import "../layouts/Layout.astro";
-
-interface Props {
-    title: string;
-    body: string;
-    href?: string;
-    image: string;
-    position?: string;
-}
-
-// Destructure the props
-const { title, href, body, image, position } = Astro.props;
+interface Props { title: string; body: string; image: string; href?: string }
+const { title, body, image, href } = Astro.props;
 ---
-
-<TiltBox borderRadius="2em" width="400px" height="350px" divisor=20>
-    <div class="card">
-        <div class="text-content">
-            <a href={href}>
-                <h3 class="card-title">{title}</h3>
-            </a>
-        </div>
-        <div class="image-body-wrapper">
-            <img src={image} alt={title} class="image-content" style=`object-position: ${position};` />
-            <div class="body-content">
-                <p>{body}</p>
-            </div>
-        </div>
-    </div>
-</TiltBox>
-
-<style>
-    .card {
-        border: 4px solid rgb(var(--accent-yellow));
-        padding: 16px;
-        border-radius: 2em;
-        display: flex;
-        flex-direction: column; /* Stack title first */
-        background-color: #0b111f;
-        width: 400px;
-        height: 360px;
-    }
-
-    .text-content {
-        margin-bottom: 12px; /* Space between title and image-body-wrapper */
-    }
-
-    .image-body-wrapper {
-        display: flex;
-        flex-direction: row; /* Image and body side by side */
-    }
-
-    .image-content {
-        width: 150px;
-        height: 270px;
-        border-radius: 1em;
-        margin-right: 16px; /* Add space between image and text */
-        object-fit: cover;
-    }
-
-    .body-content {
-        flex-grow: 1;
-    }
-
-    .card-title {
-        margin: 0;
-        font-size: 1.2em;
-        font-weight: bold;
-        text-decoration: underline;
-    }
-
-    .card p {
-        margin-top: 0;
-        font-size: 14px;
-    }
-</style>
+{href ? <a class="project-card" href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noreferrer' : undefined}>
+	<img class="project-image" src={image} alt="" />
+	<div class="card-content">
+		<h3>{title}</h3>
+		<p>{body}</p>
+		<span class="click-hint">Click to open ↗</span>
+	</div>
+	</a> : <article class="project-card">
+	<img class="project-image" src={image} alt="" />
+	<div class="card-content"><h3>{title}</h3><p>{body}</p></div>
+</article>}
