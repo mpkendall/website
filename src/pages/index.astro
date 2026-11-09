@@ -1,610 +1,116 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import TiltBox from "../components/TiltBox.astro";
-import ProjectCard from "../components/ProjectCard.astro";
-import PresentationCard from "../components/PresentationCard.astro";
-import Icon from "../components/Icon.astro";
-import type { iconPaths } from "../components/IconPaths";
-import Navigation from "../components/Navigation.astro";
-import SkillCard from "../components/SkillCard.astro";
+import Layout from '../layouts/Layout.astro';
+import Section from '../components/Section.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import DetailCard from '../components/DetailCard.astro';
+import Hero from '../components/Hero.astro';
 
-const iconLinks: {
-	label: string;
-	href: string;
-	icon: keyof typeof iconPaths;
-}[] = [
-	{
-		label: "GitHub",
-		href: "https://github.com/mpkendall",
-		icon: "github-logo",
-	},
-	{
-		label: "YouTube",
-		href: "https://www.youtube.com/@maxrobotics3703",
-		icon: "youtube-logo",
-	},
-	{
-		label: "LinkedIn",
-		href: "https://www.linkedin.com/in/max-kendall-a51209308/",
-		icon: "linkedin-logo",
-	},
-	{
-		label: "Discord",
-		href: "https://discord.com/users/699990515256655943",
-		icon: "discord-logo",
-	},
-	{
-		label: "Email",
-		href: "mailto:maxsrobotics@gmail.com",
-		icon: "email-logo",
-	},
+const projects = [
+	['Tiny4FSK', 'An ultra-tiny, fully open-source high-altitude research platform for students, educators, and researchers.', 'https://github.com/New-England-Weather-Balloon-Society/Tiny4FSK', '/assets/projects/tiny4fsk.png'],
+	['habtronics', 'A business selling high-altitude electronics, services, and curriculum to educators and hobbyists.', 'https://www.habtronics.com', '/assets/projects/habtronics.png'],
+	['N.E.W.B.S.', 'The New England Weather Balloon Society, an online and in-person club dedicated to launching, tracking, and recovering balloons.', 'https://nescitech.org/newbs', '/assets/projects/NEWBS.jpg'],
+	['Apex', 'A months-long near-space hackathon where teens worldwide create projects for high-altitude balloon missions.', 'https://apex.hackclub.com', '/assets/projects/apex.png'],
+	['HABGab 2023', 'A major high-altitude balloon flight with live video, a ham radio repeater, and student experiments.', 'https://github.com/New-England-Weather-Balloon-Society/HABGab-2023', '/assets/projects/habgab.jpg'],
+	['STAX', 'A custom azimuth-elevation rotator used to aim a directional antenna at a balloon payload.', undefined, '/assets/projects/stax.jpg'],
+	['Ham Club', 'A Hack Club project that gave youth ham radios if they got their license. I helped with curriculum and organization.', 'https://ham.hackclub.com', '/assets/projects/hamclub.webp'],
+	['OpenCV Resistor Finder', 'An OpenCV resistor value finder built for Beantown Bash 2023, which my teammate and I won.', 'https://github.com/mpkendall/resistorfinder', '/assets/projects/beantown.webp'],
+	['Cubes in Space 2022', 'An electronics payload using Faraday’s Law to test generating energy from sounding-rocket vibrations.', 'https://github.com/mpkendall/CubesinSpace', '/assets/projects/CiS.jpg'],
+	['WB1-3', 'A series of early high-altitude balloon flights before the New England Weather Balloon Society.', 'https://github.com/New-England-Weather-Balloon-Society/WB3', '/assets/projects/wbs.jpg'],
 ];
 
-const getAge = (birthDate: Date) => {
-	const today = new Date();
-	let age = today.getFullYear() - birthDate.getFullYear();
-	const m = today.getMonth() - birthDate.getMonth();
-	if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-		age--;
-	}
-	return age;
-};
+const presentations = [
+	['How to HAB', 'How to launch your very own high-altitude balloon.', 'August 2026'],
+	['StratoScience 2026 - Ham Radio and Education to New Heights', 'A discussion of the StratoScience program and student projects.', 'August 2026'],
+	['Arduino Workshop', 'A 3-hour walkthrough of creating a morse code Arduino keyer.', 'August 2026'],
+	['StratoScience 2025 - Ham Radio and Education to New Heights', 'A discussion of the StratoScience program and student projects.', 'August 2025'],
+	['RF PCB Design', 'Key tips and tricks for RF PCB design, including layout considerations and material selection.', 'April 2025, August 2025'],
+	['Tiny4FSK - The Future of High-Altitude Tracking Systems', 'Surface-level general information about Tiny4FSK.', 'April 2024, September 2024'],
+	['Tiny4FSK - The Cutting-Edge High-Altitude Tracking System', 'A deep dive into Tiny4FSK and how it works.', 'August 2024, November 2024'],
+	['Zero to Hero KiCAD', 'A three-hour workshop teaching students how KiCAD works while they create a blinking circuit.', 'August 2024'],
+	['StratoScience 2024 - Ham Radio and Education to New Heights', 'A discussion of the StratoScience program and student projects.', 'August 2024, October 2024, May 2025'],
+	['NEWSDR Conference', 'A lightning talk and Tiny4FSK research poster.', 'May 2024'],
+	['Practical High-Altitude Ballooning', 'Common practices, tips, and instruction for flying high-altitude balloons.', 'March 2024'],
+	['Radiosonde Hunting and Reprogramming', 'Methods of radiosonde retrieval and how to reprogram them.', 'August 2023'],
+	['Youth Engineering and Ham Radio on High-Altitude Balloons', 'StratoScience, student projects, and HABGab 2023.', 'August 2023'],
+	['Weather Education Day', 'A speaking role at Weather Education Day at Gillette Stadium.', 'April 2023'],
+	['DIY Electronics and APRS for HAB Payloads', 'How hobbyists can fly research projects at low cost.', 'August 2022'],
+	['Cubes in Space', 'An overview of the Cubes in Space 2022 project.', 'August 2022'],
+	['Shake, Shake, Power', 'Cubes in Space 2022 and how Faraday’s Law works.', 'Spring 2022'],
+];
 
-const birthDate = new Date("2010-11-20");
+const classes = [
+	['StratoScience Lab', 'An intensive nine-month hands-on engineering design class where students fly experiments on high-altitude balloons.', '2023–2026', 'https://nescitech.org/stratoscience'],
+	['Arduino Class', 'A six-week beginner and intermediate Arduino crash course building laser-tag bots and obstacle-avoidance robots.', '2023–2026', 'https://nescitech.org/arduino'],
+	['Arduino Coding and Robotics', 'A season-long Arduino class at the Medway Public Library.', '2019–2024'],
+	['WiTek Engineering Workshop', 'An open recurring workshop which I have led several times.', '2023–2024'],
+	['StratoScience @ BFCCPS', 'A condensed five-week version of StratoScience Lab for school members.', '2023–2024'],
+	['STEAM', 'Mentoring and teaching several STEAM classes at the Medway Public Library.', '2023–2024'],
+];
+
+const leadership = [
+	['N.E.W.B.S.', 'Founder of the New England Weather Balloon Society; I manage its Discord, teach classes, and work local events.', '2023–2026'],
+	['New England Sci-Tech', 'A member of the leadership team, official instructor, and informal advisor at a local STEM makerspace.', '2022–2026'],
+	['STARS', 'Vice-president, previously president, youth ambassador, and collegiate outreach of the Sci-Tech Amateur Radio Society.', '2023–2024'],
+	['NE HamXposition Youth Subcommittee', 'Helping tailor activities at the North East HamXposition for youth attendees.', '2024'],
+	['Sci-Tech Hack Club', 'Co-leading a club that organizes classes and workshops around coding.', '2022–2024'],
+	['Science Explorers 4H Club', 'President of a club running 4H activities, including STEAM at the Medway Public Library.', '2023–2024'],
+];
+
+const achievements = [
+	['MHS - High Honors', 'Academic excellence award at MHS.', '2026'],
+	['National Latin Exam Gold Medal', 'A gold medal and perfect score on the National Latin Exam thrice.', '2023–2026'],
+	['Amateur Extra Amateur Radio License', 'Passed Technician, General, and Amateur Extra license levels at age 10.', '2020–2021'],
+	['BFCCPS Medal of Virtue', 'Recognized for all four virtues: Justice, Temperance, Prudence, and Fortitude.', '2024'],
+];
+
+const publicity = [
+	['Hackaday - Tiny4FSK', 'An article about the Tiny4FSK project.', '2024', 'https://hackaday.com/2024/10/03/a-lightweight-balloon-tracker-for-high-altitude-missions'],
+	['Microchip Makes - Tiny4FSK', 'Informational posts about Tiny4FSK.', '2024', 'https://x.com/MicrochipMakes/status/1790853868764397634'],
+	['CBS News - Weather Education Day', 'A segment about the New England Weather Balloon Society and radiosonde hunting.', '2024', 'https://www.cbsnews.com/boston/news/wbz-weather-education-day-new-england-revolution-2024/'],
+	['The Boston Globe - N.E.W.B.S.', 'Coverage of the New England Weather Balloon Society and high-profile balloon events.', '2023', 'https://www.bostonglobe.com/2023/02/27/metro/facing-scrutiny-like-never-before-new-englands-amateur-balloonists-are-feeling-pressure/'],
+	['Medway-Millis Local Paper', 'Coverage of early New England Weather Balloon Society projects.', '2021', 'https://www.millismedwaynews.com/2021/08/02/364393/rising-fifth-grader-launches-second-weather-balloon-max-kendall-is-now-working-on-a-third-with-the-medway-balloon-society'],
+	['Wicked Local - Country Gazette', 'Coverage of independent weather balloon projects.', '2021', 'https://www.wickedlocal.com/picture-gallery/country-gazette/2021/03/03/photos-max-kendalls-weather-balloon-project/6897504002/'],
+];
 ---
 
 <Layout title="Max Kendall">
 	<main>
-		<Navigation />
-		<TiltBox width="900px">
-			<div class="welcome">
-				<div>
-					<h1 style="margin-bottom: 1rem;">
-						<span style="font-size: 2.5rem;">Hey there, I'm</span>
-						<br />
-						<span class="text-gradient">Max Kendall</span>
-					</h1>
-					<div class="socials">
-						{
-							iconLinks.map(({ href, icon, label }) => (
-								<a href={href} class="social">
-									<span class="sr-only">{label}</span>
-									<Icon icon={icon} size="100" />
-								</a>
-							))
-						}
-					</div>
-					<p
-						id="age-text"
-						class="text-lg"
-						style="text-align: center; max-width: 30rem; margin: auto;"
-					>
-					</p>
-				</div>
-				<div>
-					<img
-						src="assets/portrait.jpg"
-						alt="Max in front of his home electronics lab!"
-					/>
-				</div>
+		<nav class="navbar" aria-label="Main navigation">
+			<a href="#home">home</a>
+			<a href="#projects">projects</a>
+			<a href="#speaking">public speaking</a>
+			<a href="#classes">classes</a>
+			<a href="#leadership">leadership</a>
+			<a href="#achievements">achievements</a>
+			<a href="#publicity">publicity</a>
+		</nav>
+
+		<section id="home"><Hero /></section>
+
+		<Section id="projects" title="projects" intro="">
+			<div class="project-grid">
+				{projects.map(([title, body, href, image]) => <ProjectCard title={title} body={body} href={href} image={image} />)}
 			</div>
-		</TiltBox>
-		<!-- <hr style="margin-top: 2em; margin-bottom: 2em;" />
-		<h1 style="margin-bottom: 0px;" id="skills-header">Skills</h1>
-		<p style="margin-bottom:30px; margin-top: 30px; text-align: center;">
-			Here are some of my skills in various areas!
-		</p>
-		<h2 style="font-size: 30px;">Electronics</h2>
-		<hr style="margin-top: 1em; margin-bottom: 1em; width: 300px;" />
-		<div class="skills">
-			<SkillCard name="KiCAD" body="PCB Design" image="assets/skills/kicad.svg" position="0%" tags={["tiny4fsk", "cubes in space"]} />
-			<SkillCard name="MCU Coding" body="Lightweight and low-power embedded programming" image="assets/skills/kicad.svg" position="0%" tags={["stax", "wb1-3", "habgab"]} />
-			<SkillCard name="AVR/ARM" body="Lorem ipsum domor set" image="assets/skills/kicad.svg" position="0%" tags={["tiny4fsk", "cubes in space"]} />
-			<SkillCard name="Test Equipment" body="Lorem ipsum domor set" image="assets/skills/kicad.svg" position="0%" tags={["tiny4fsk"]} />
-		</div>
-		<h2 style="font-size: 30px;"></h2>
-		<hr style="margin-top: 1em; margin-bottom: 1em; width: 300px;" />
-		<div class="skills">
-			<SkillCard name="KiCAD" body="Lorem ipsum domor set" image="assets/skills/kicad.svg" position="0%" tags={["tiny4fsk", "cubes in space"]} />
-			<SkillCard name="MCU Coding" body="Lorem ipsum domor set" image="assets/skills/kicad.svg" position="0%" tags={["stax", "wb1-3", "habgab"]} />
-			<SkillCard name="AVR/ARM" body="Lorem ipsum domor set" image="assets/skills/kicad.svg" position="0%" tags={["tiny4fsk", "cubes in space"]} />
-			<SkillCard name="Test Equipment" body="Lorem ipsum domor set" image="assets/skills/kicad.svg" position="0%" tags={["tiny4fsk"]} />
-		</div> -->
-		<hr style="margin-top: 2em; margin-bottom: 2em;" />
-		<h1 style="margin-bottom: 0px;" id="project-header">My Projects</h1>
-		<p style="margin-bottom:30px; margin-top: 30px; text-align: center;">
-			I believe that project-based learning is the best form of learning.
-			Throughout all of my projects, I have developed many skills.
-		</p>
-		<div class="projects">
-			<ProjectCard
-				title="Tiny4FSK"
-				body="Tiny4FSK is an ultra-tiny high-altitude research platform, fully open source. It allows students, educators, and researchers to gain access to advanced high-altitude research environments. It is designed to fly on high-altitude balloons, which is a hobby which allows people to fly research experiments to over 100,000 feet (31 km)!"
-				href="/tiny4fsk"
-				image="assets/projects/Tiny4FSK_Sky.jpg"
-			/>
-			<ProjectCard
-				title="habtronics"
-				body="habtronics is a business I'm starting to sell high-altitude electronics, services, and curriculum to educators and hobbyists."
-				href="https://habtronics.com"
-				image="assets/projects/habtronics.png"
-			/>
-			<ProjectCard
-				title="Apex"
-				body="Apex is a months-long near-space hackathon (through Hack Club) where teens worldwide team up to create and develop projects for high-altitude balloon missions. I am a lead organizer and created much of the infrastructure and tools for the program."
-				href="https://apex.hackclub.com"
-				image="assets/projects/apex.png"
-			/>
-			<ProjectCard
-				title="N.E.W.B.S."
-				body="I founded the New England Weather Balloon Society, an online and in-person club dedicated to launching, tracking, and recovering high-altitude balloons. I created and manage the Discord server, which currently has over 100 members and continuous activity. I also run booths at local conventions."
-				href="https://nescitech.org/newbs"
-				image="assets/projects/NEWBS.jpg"
-				position="55%"
-			/>
-			<ProjectCard
-				title="HABGab 2023"
-				body="This was our (meaning NEWBS) major high-altitude balloon flight in the Summer of 2023. It consisted of a live-video payload (courtesy of Mike Hojnowski KD2EAT), a ham radio repeater, and a payload of student experiments."
-				href="https://github.com/New-England-Weather-Balloon-Society/HABGab-2023"
-				image="assets/projects/habgab.jpg"
-				position="40%"
-			/>
-			<ProjectCard
-				title="STAX"
-				body="This was a custom-designed azimuth-elevation rotator. It was used during the HABGab 2023 balloon flight to aim a directional beam antenna towards the payload while it was in the air, to receive live video downlink. Mechanical design by Steve Kondo K1STK."
-				image="assets/projects/stax.jpg"
-				position="40%"
-			/>
-			<ProjectCard
-				title="Ham Club"
-				body="This was a project in conjunction with Hack Club that gave youth ham radios if they got their license. I assisted with the curriculum, planning, organization, and graphic design of the project."
-				href="https://ham.hackclub.com"
-				image="assets/projects/hamclub.webp"
-				position="50%"
-			/>
-			<ProjectCard
-				title="OpenCV Resistor Finder"
-				body="This was an OpenCV resistor value finder that utilized complex mathematics to find the value of the resistor being held up to the webcam. This was developed as a project for the Beantown Bash 2023 hackathon, which Charlie Nicholson (my teammate) and myself won."
-				href="https://github.com/mpkendall/resistorfinder"
-				image="assets/projects/beantown.webp"
-				position="30%"
-			/>
-			<ProjectCard
-				title="Cubes in Space 2022"
-				body="Cubes in Space is a program which gives students a 40mm cube to fly experiments on a sounding rocket. I flew an advanced electronics payload featuring application of Faraday's Law to test viability of generating electrical energy from the vibrations of a sounding rocket."
-				href="https://github.com/mpkendall/CubesinSpace"
-				image="assets/projects/CiS.jpg"
-				position="30%"
-			/>
-			<ProjectCard
-				title="WB1-3"
-				body="These were a series of consecutive high-altitude balloons flights, before the dawn of NEWBS. WB1 was my first weather balloon, and WB3 was the last balloon in that naming convention."
-				href="https://github.com/New-England-Weather-Balloon-Society/WB3"
-				image="assets/projects/wbs.jpg"
-				position="70%"
-			/>
-		</div>
-		<hr style="margin-top: 2em; margin-bottom: 2em;" />
-		<h1 style="margin-bottom: 0px;" id="speaking-header">
-			Public Speaking
-		</h1>
-		<p style="margin-bottom:30px; margin-top: 30px; text-align: center;">
-			I have developed my passion for public speaking over the course of
-			many years. Here are a few of my recent presentations that I
-			authored and presented!
-		</p>
-		<div class="speaking">
-			<PresentationCard
-				title="RF PCB Design"
-				body="I presented key tips and tricks for RF PCB design, including layout considerations, material selection, and more."
-				tags={["stars", "hamxposition"]}
-				date="April 2025, August 2025"
-			/>
-			<PresentationCard
-				title="Tiny4FSK - The Future of High-Altitude Tracking Systems"
-				body="This presentation covered surface-level general information about Tiny4FSK."
-				tags={["4h", "big-e", "4h foundation"]}
-				date="April 2024, September 2024"
-			/>
-			<PresentationCard
-				title="Tiny4FSK - The Cutting-Edge High-Altitude Tracking System"
-				body="This presentation delved deeply into Tiny4FSK and how it works."
-				tags={["hamxposition", "gpsl", "stars", "algonquin arc"]}
-				date="August 2024, November 2024"
-			/>
-			<PresentationCard
-				title="Zero to Hero KiCAD"
-				body="This is a 3-hour workshop aimed to teach students how KiCAD works, and students create a blinking circuit."
-				tags={["hamxposition"]}
-				date="August 2024"
-			/>
-			<PresentationCard
-				title="StratoScience 2024 - Ham Radio and Education to New Heights"
-				body="Discussed StratoScience program and the student projects for the year."
-				tags={["hamxposition", "stars", "fara"]}
-				date="August 2024, October 2024, May 2025"
-			/>
-			<PresentationCard
-				title="NEWSDR Conference"
-				body="I presented a lightning talk and showed my Tiny4FSK research poster."
-				tags={["newsdr"]}
-				date="May 2024"
-			/>
-			<PresentationCard
-				title="Practical High-Altitude Ballooning"
-				body="Discussed common practices, tips and tricks, and general instruction for flying high-altitude balloons."
-				tags={["hampden county arc"]}
-				date="March 2024"
-			/>
-			<PresentationCard
-				title="Radiosonde Hunting and Reprogramming"
-				body="Discussed methods of radiosonde retrieval and showed how to reprogram them."
-				tags={["hamxposition"]}
-				date="August 2023"
-			/>
-			<PresentationCard
-				title="Youth Engineering and Ham Radio on High-Altitude Balloons"
-				body="Discussed StratoScience program and the student projects for the year, as well as HABGab 2023."
-				tags={["hamxposition"]}
-				date="August 2023"
-			/>
-			<PresentationCard
-				title="Weather Education Day"
-				body="I got a speaking role on Weather Education Day at Gillette Stadium."
-				tags={["gillette stadium"]}
-				date="April 2023"
-			/>
-			<PresentationCard
-				title="DIY Electronics and APRS for HAB Payloads"
-				body="I outlined how hobbyists can fly research projects at low cost."
-				tags={["hamxposition"]}
-				date="August 2022"
-			/>
-			<PresentationCard
-				title="Cubes in Space"
-				body="I outlined the Cubes in Space 2022 project."
-				tags={["hamxposition"]}
-				date="August 2022"
-			/>
-			<PresentationCard
-				title="Shake, Shake, Power"
-				body="I outlined Cubes in Space 2022 and how Faraday's Law works."
-				tags={["4h"]}
-				date="Spring 2022"
-			/>
-		</div>
-		<hr style="margin-top: 2em; margin-bottom: 2em;" />
-		<h1 style="margin-bottom: 0px;" id="classes-header">Classes</h1>
-		<p style="margin-bottom:30px; margin-top: 30px; text-align: center;">
-			In addition to presentations, I also enjoy teaching workshops and
-			classes, both one-time, and recurring. Have a look below!
-		</p>
-		<div class="teaching">
-			<PresentationCard
-				title="StratoScience Lab"
-				body="I teach an intensive 9-month hands-on engineering design class, where students can fly experiments on high-altitude balloons."
-				href="https://nescitech.org/stratoscience"
-				tags={["new england sci-tech", "newbs"]}
-				date="2023-2024-2025-2026"
-				border="rgb(255, 165, 0)"
-			/>
-			<PresentationCard
-				title="Arduino Class"
-				body="I teach an 6-week beginner and intermediate Arduino crash course. We build laser-tag bots and obstacle-avoidance robots."
-				href="https://nescitech.org/arduino"
-				tags={["new england sci-tech"]}
-				date="2023-2024-2025-2026"
-				border="rgb(255, 165, 0)"
-			/>
-			<PresentationCard
-				title="Arduino Coding and Robotics"
-				body="I teach a season-long Arduino class at the Medway Public Library."
-				href=""
-				tags={["medway public library"]}
-				date="2019-2020-2021-2022-2023-2024"
-				border="rgb(255, 165, 0)"
-			/>
-			<PresentationCard
-				title="WiTek Engineering Workshop"
-				body="WiTek is an open reccuring workshop which I have led several times."
-				tags={["new england sci-tech"]}
-				date="2023-2024"
-				border="rgb(255, 165, 0)"
-			/>
-			<PresentationCard
-				title="StratoScience @ BFCCPS"
-				body="I have taught a condensed 5-week version of StratoScience Lab to members of my school."
-				tags={["bfccps"]}
-				date="2023-2024"
-				border="rgb(255, 165, 0)"
-			/>
-			<PresentationCard
-				title="STEAM"
-				body="I mentor and teach several STEAM classes at the Medway Public Library."
-				tags={["medway public library"]}
-				date="2023-2024"
-				border="rgb(255, 165, 0)"
-			/>
-		</div>
-		<hr style="margin-top: 2em; margin-bottom: 2em;" />
-		<h1 style="margin-bottom: 0px;" id="leadership-header">Leadership</h1>
-		<p style="margin-bottom:30px; margin-top: 30px; text-align: center;">
-			Here are some experiences in leadership I have had:
-		</p>
-		<div class="leadership">
-			<PresentationCard
-				title="STARS"
-				body="I am the vice-president (and previously president), youth ambassador, and collegiate outreach of the Sci-Tech Amateur Radio Society. I lead meetings, form activities, and work booths for the club."
-				tags={["new england sci-tech"]}
-				date="2023-2024"
-			/>
-			<PresentationCard
-				title="N.E.W.B.S"
-				body="I am a founder of the New England Weather Balloon Society. I manage the Discord server (100+ members), teach classes, and work booths for local events."
-				tags={["new england sci-tech"]}
-				date="2023-2024"
-			/>
-			<PresentationCard
-				title="NE HamXposition Youth Subcomittee"
-				body="I am a member of the youth subcommitee of the North East HamXposition. I help tailor activities at the HamXposition for youth attendees."
-				tags={["hamxposition", "new england sci-tech"]}
-				date="2024"
-			/>
-			<PresentationCard
-				title="New England Sci-Tech"
-				body="I am on the leadership team of New England Sci-Tech, a local STEM makerspace. I am an official instructor and an informal advisor."
-				tags={["new england sci-tech"]}
-				date="2022-2023-2024"
-			/>
-			<PresentationCard
-				title="Sci-Tech Hack Club"
-				body="I co-lead the Sci-Tech Hack Club along with Charlie Nicholson. I organize, lead classes, and conduct workshops surrounding the love of coding."
-				tags={["new england sci-tech"]}
-				date="2022-2023-2024"
-			/>
-			<PresentationCard
-				title="Science Explorers 4H Club"
-				body="I am the president of the Science Explorers 4H club. I attend and run 4H activities, including STEAM at the Medway Public Library."
-				tags={["medway public library"]}
-				date="2023-2024"
-			/>
-		</div>
-		<hr style="margin-top: 2em; margin-bottom: 2em;" />
-		<h1 style="margin-bottom: 0px;" id="achievements-header">
-			Awards and Achievements
-		</h1>
-		<p style="margin-bottom:30px; margin-top: 30px; text-align: center;">
-			Here are some of my achievements and awards:
-		</p>
-		<div class="achievements">
-			<PresentationCard
-				title="NLE Gold Metal and Perfect Score"
-				body="Along with electronics and technology, I also have a passion for Latin. I scored a gold metal and perfect score on the National Latin Exam 2 years in a row."
-				tags={["new england sci-tech"]}
-				date="2023-2024"
-				border="rgb(255, 165, 0)"
-			/>
-			<PresentationCard
-				title="Amateur Extra Amateur Radio License"
-				body="I passed Technician, General, and Amateur Extra amateur radio license levels when I was 10 years old."
-				tags={["new england sci-tech"]}
-				date="2020-2021"
-				border="rgb(255, 165, 0)"
-			/>
-			<PresentationCard
-				title="BFCCPS Medal of Virtue"
-				body="I received a Medal of Virtue from my school recognizing all 4 virtues: Justice, Temperance, Prudence, and Fortitude."
-				tags={["bfccps"]}
-				date="2024"
-				border="rgb(255, 165, 0)"
-			/>
-		</div>
-		<hr style="margin-top: 2em; margin-bottom: 2em;" />
-		<h1 style="margin-bottom: 0px;" id="publicity-header">Publicity</h1>
-		<p style="margin-bottom:30px; margin-top: 30px; text-align: center;">
-			Here are some publications in which I have been mentioned: <em
-				>Tip: click anywhere in the card to see the article!</em
-			>
-		</p>
-		<div class="publicity">
-			<PresentationCard
-				title="Hackaday - Tiny4FSK"
-				body="An article was published on Hackaday regarding the Tiny4FSK project!"
-				href="https://hackaday.com/2024/10/03/a-lightweight-balloon-tracker-for-high-altitude-missions"
-				tags={["hackaday"]}
-				date="2024"
-			/>
-			<PresentationCard
-				title="Microchip Makes - Tiny4FSK"
-				body="Microchip Makes released informational posts regarding Tiny4FSK."
-				href="https://x.com/MicrochipMakes/status/1790853868764397634"
-				tags={["microchip makes"]}
-				date="2024"
-			/>
-			<PresentationCard
-				title="CBS News - Weather Education Day"
-				body="My dad and I got invited to speak at Weather Education Day by CBS. We spoke about the New England Weather Balloon Society and radiosonde hunting. (53 minutes in)."
-				href="https://www.cbsnews.com/boston/news/wbz-weather-education-day-new-england-revolution-2024/"
-				tags={["cbs news", "wbz news"]}
-				date="2024"
-			/>
-			<PresentationCard
-				title="The Boston Globe - N.E.W.B.S"
-				body="An article was published in the Boston Globe about the New England Weather Balloon Society! More specifically, it relates to some high-profile HAB events."
-				href="https://www.bostonglobe.com/2023/02/27/metro/facing-scrutiny-like-never-before-new-englands-amateur-balloonists-are-feeling-pressure/"
-				tags={["boston globe"]}
-				date="2023"
-			/>
-			<PresentationCard
-				title="Medway-Millis Local Paper"
-				body="An article was published in my local paper regarding New England Weather Balloon Society."
-				href="https://www.millismedwaynews.com/2021/08/02/364393/rising-fifth-grader-launches-second-weather-balloon-max-kendall-is-now-working-on-a-third-with-the-medway-balloon-society"
-				tags={["millis medway"]}
-				date="2021"
-			/>
-			<PresentationCard
-				title="Wicked Local - Country Gazette"
-				body="An article was published in another local paper regarding my independent weather balloon projects."
-				href="https://www.wickedlocal.com/picture-gallery/country-gazette/2021/03/03/photos-max-kendalls-weather-balloon-project/6897504002/"
-				tags={["wicked local"]}
-				date="2021"
-			/>
-		</div>
+		</Section>
+
+		<Section id="speaking" title="public speaking" intro="a few presentations I've authored and delivered.">
+			<div class="card-grid">{presentations.map(([title, body, date]) => <DetailCard title={title} body={body} date={date} />)}</div>
+		</Section>
+
+		<Section id="classes" title="classes" intro="I also like teaching classes and workshops. here are some I've taught or helped with.">
+			<div class="card-grid">{classes.map(([title, body, date, href]) => <DetailCard title={title} body={body} date={date} href={href} accent />)}</div>
+		</Section>
+
+		<Section id="leadership" title="leadership" intro="">
+			<div class="card-grid">{leadership.map(([title, body, date]) => <DetailCard title={title} body={body} date={date} />)}</div>
+		</Section>
+
+		<Section id="achievements" title="awards and achievements" intro="">
+			<div class="card-grid">{achievements.map(([title, body, date]) => <DetailCard title={title} body={body} date={date} accent />)}</div>
+		</Section>
+
+		<Section id="publicity" title="publicity" intro="here are some publications in which I have been mentioned.">
+			<div class="card-grid">{publicity.map(([title, body, date, href]) => <DetailCard title={title} body={body} date={date} href={href} />)}</div>
+		</Section>
 	</main>
-	<script>
-		const getAge = (birthDate: Date): number => {
-			const today = new Date();
-			let age = today.getFullYear() - birthDate.getFullYear();
-			const m = today.getMonth() - birthDate.getMonth();
-			if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-				age--;
-			}
-			return age;
-		};
-
-		// Update the age on the page
-		document.addEventListener("DOMContentLoaded", () => {
-			const birthDate = new Date("2010-11-20");
-			const age = getAge(birthDate);
-			const ageTextElement = document.getElementById("age-text");
-
-			if (ageTextElement) {
-				ageTextElement.innerText = `I'm a ${age}-year-old avid youth developer based in the Greater Boston area in Massachusetts. I love sending projects into near-space on high altitude balloons, and I enjoy anything involving PCBs, embedded firmware, web development, CAD, 3D printing, and combining all of these into a single functional project. I have my Amateur Extra radio license (callsign W0MXX). I also love teaching and presenting these technical topics to spread the knowledge. Look below for some of my projects!`;
-			} else {
-				console.error("Age text element not found.");
-			}
-		});
-	</script>
 </Layout>
-
-<style>
-	main {
-		margin: auto;
-		margin-top: 3rem;
-		padding: 1rem;
-		width: 1000px;
-		max-width: calc(100% - 2rem);
-		color: white;
-		font-size: 20px;
-		line-height: 1.6;
-		justify-items: center;
-		padding-top: 80px;
-	}
-
-	[id] {
-		scroll-margin-top: 9rem;
-	}
-
-	hr {
-		margin: inherit;
-	}
-
-	.socials {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.625rem;
-		font-size: var(--icon-size);
-		margin-bottom: 1rem;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.social {
-		display: flex;
-		padding: var(--icon-padding);
-		text-decoration: none;
-		transition: color var(--theme-transition);
-		justify-content: center;
-	}
-
-	h1 {
-		font-size: 4rem;
-		font-weight: 700;
-		line-height: 1;
-		text-align: center;
-		margin-bottom: 1em;
-	}
-
-	.welcome {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		border: solid rgb(var(--accent-red)) 5px;
-		border-radius: 4em;
-		background-color: #0b111f;
-		border-style: solid;
-	}
-
-	.welcome div {
-		margin: 1rem;
-	}
-
-	.welcome img {
-		border: solid gray 5px;
-		border-radius: 4em;
-	}
-
-	.text-gradient {
-		background-image: var(--accent-gradient);
-		/* background-color: #92140C; */
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-size: 400%;
-		background-position: 0%;
-	}
-
-	.projects {
-		display: grid;
-		gap: 30px;
-		grid-template-columns: repeat(2, 400px);
-		justify-items: center;
-	}
-
-	.speaking {
-		display: grid;
-		gap: 10px;
-		grid-template-columns: repeat(3, 300px);
-		justify-items: center;
-	}
-
-	.teaching {
-		display: grid;
-		gap: 10px;
-		grid-template-columns: repeat(3, 300px);
-		justify-items: center;
-	}
-
-	.leadership {
-		display: grid;
-		gap: 10px;
-		grid-template-columns: repeat(3, 300px);
-		justify-items: center;
-	}
-
-	.achievements {
-		display: grid;
-		gap: 10px;
-		grid-template-columns: repeat(3, 300px);
-		justify-items: center;
-	}
-	.achievements {
-		display: grid;
-		gap: 10px;
-		grid-template-columns: repeat(3, 300px);
-		justify-items: center;
-	}
-
-	.publicity {
-		display: grid;
-		gap: 10px;
-		grid-template-columns: repeat(3, 300px);
-		justify-items: center;
-	}
-
-	.skills {
-		display: grid;
-		gap: 10px;
-		grid-template-columns: repeat(4, 200px);
-		justify-items: center;
-	}
-</style>

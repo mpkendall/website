@@ -1,62 +1,18 @@
 ---
-interface Props {
-	title: string;
-}
-
-const { title } = Astro.props;
+import '../styles/global.css';
+interface Props { title?: string }
+const { title = 'Max Kendall' } = Astro.props;
 ---
-
-<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content="Max Kendall — RF design, embedded systems, and high-altitude balloon projects." />
+		<link rel="icon" href="/favicon.svg" />
 		<title>{title}</title>
 	</head>
 	<body>
 		<slot />
-		<p style="color:gray; text-align:center; margin-bottom:10px; font-size:12px;">Made with Astro. Hosted on Vercel and <a href="https://github.com/maxsrobotics/website" style="text-decoration:underline;">on GitHub.</a> Licensed under MIT. © 2024 Maxwell Kendall.</p>
+		<footer>Made with Astro · <a href="https://github.com/mpkendall/website">Open source on GitHub</a> · © 2026 Max Kendall</footer>
 	</body>
 </html>
-<style is:global>
-	:root {
-		--accent-red: 139, 43, 43;
-		--accent-yellow: 255, 165, 0;
-		--accent: 146, 20, 12;
-		--accent-light: 255, 140, 0;
-		--accent-dark: 139, 43, 43;
-		--accent-gradient: linear-gradient(
-			30deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 40%,
-			white 60%
-		);
-	}
-	::selection {
-		background-color: rgb(var(--accent-red));
-		color: white;
-	}
-	::-moz-selection {
-		background-color: rgb(var(--accent-red));
-		color: white;
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background: #13151a;/* #13151a */
-		scroll-behavior: smooth;
-	}
-	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
-	}
-</style>

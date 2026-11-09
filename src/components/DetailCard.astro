@@ -1,0 +1,14 @@
+---
+interface Props { title: string; body: string; date: string; href?: string; accent?: boolean }
+const { title, body, date, href, accent = false } = Astro.props;
+---
+{href ? <a class:list={['detail-card', { accent }]} href={href} target="_blank" rel="noreferrer">
+	<div class="detail-top"><span class="date">{date}</span></div>
+	<h3>{title}</h3>
+	<p>{body}</p>
+	<span class="click-hint">Click to open ↗</span>
+</a> : <article class:list={['detail-card', { accent }]}>
+	<div class="detail-top"><span class="date">{date}</span></div>
+	<h3>{title}</h3>
+	<p>{body}</p>
+</article>}
